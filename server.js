@@ -59,51 +59,8 @@ uploadDirs.forEach(dir => {
     }
 });
 
-// Multer configuration for file uploads
-const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        let uploadPath = 'uploads/';
-        if (file.fieldname.includes('Photo')) {
-            uploadPath += 'photos/';
-        } else if (file.fieldname === 'voiceRecording') {
-            uploadPath += 'voices/';
-        } else {
-            uploadPath += 'avatars/';
-        }
-        cb(null, uploadPath);
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ 
-    storage: storage,
-    limits: {
-        fileSize: 25 * 1024 * 1024 // 25MB limit
-    },
-    fileFilter: (req, file, cb) => {
-        if (file.fieldname === 'voiceRecording') {
-            // Accept audio files
-            if (file.mimetype.startsWith('audio/')) {
-                cb(null, true);
-            } else {
-                cb(new Error('Only audio files are allowed for voice recording'));
-            }
-        } else if (file.fieldname.includes('Photo')) {
-            // Accept image files
-            if (file.mimetype.startsWith('image/')) {
-                cb(null, true);
-            } else {
-                cb(new Error('Only image files are allowed for photos'));
-            }
-        } else {
-            cb(null, true);
-        }
-    }
-});
+// Cloudinary configuration for file uploads
+const { upload, uploadToCloudinary } = require('./config/cloudinary');
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -235,12 +192,50 @@ app.post('/api/register', upload.fields([
 
         await newAvatar.save();
 
-        // Process voice recording
-        if (req.files && req.files.voiceRecording) {
-            const voiceFile = req.files.voiceRecording[0];
+        // Process file uploads to Cloudinary
+        const uploadedFiles = {};
+        
+        if (req.files) {
+            // Upload voice recording
+            if (req.files.voiceRecording) {
+                const voiceFile = req.files.voiceRecording[0];
+                console.log(`🎤 Uploading voice recording to Cloudinary...`);
+                const voiceResult = await uploadToCloudinary(voiceFile, 'eternum/voices');
+                uploadedFiles.voiceRecording = voiceResult.secure_url;
+                console.log(`✅ Voice uploaded: ${voiceResult.secure_url}`);
+            }
+            
+            // Upload profile photos
+            if (req.files.frontPhoto) {
+                const frontPhoto = req.files.frontPhoto[0];
+                console.log(`📸 Uploading front photo to Cloudinary...`);
+                const frontResult = await uploadToCloudinary(frontPhoto, 'eternum/photos');
+                uploadedFiles.frontPhoto = frontResult.secure_url;
+                console.log(`✅ Front photo uploaded: ${frontResult.secure_url}`);
+            }
+            
+            if (req.files.leftPhoto) {
+                const leftPhoto = req.files.leftPhoto[0];
+                console.log(`📸 Uploading left photo to Cloudinary...`);
+                const leftResult = await uploadToCloudinary(leftPhoto, 'eternum/photos');
+                uploadedFiles.leftPhoto = leftResult.secure_url;
+                console.log(`✅ Left photo uploaded: ${leftResult.secure_url}`);
+            }
+            
+            if (req.files.rightPhoto) {
+                const rightPhoto = req.files.rightPhoto[0];
+                console.log(`📸 Uploading right photo to Cloudinary...`);
+                const rightResult = await uploadToCloudinary(rightPhoto, 'eternum/photos');
+                uploadedFiles.rightPhoto = rightResult.secure_url;
+                console.log(`✅ Right photo uploaded: ${rightResult.secure_url}`);
+            }
+        }
+
+        // Create voice profile with Cloudinary URL
+        if (uploadedFiles.voiceRecording) {
             const voiceProfile = new VoiceProfile({
                 userId: newUser._id,
-                recordingUrl: voiceFile.path,
+                recordingUrl: uploadedFiles.voiceRecording,
                 recordingDuration: 30, // Default 30 seconds
                 recordingText: "Welcome to Eternum voice recording...",
                 voiceCharacteristics: {
@@ -252,6 +247,16 @@ app.post('/api/register', upload.fields([
             });
 
             await voiceProfile.save();
+        }
+
+        // Update user with photo URLs
+        if (uploadedFiles.frontPhoto || uploadedFiles.leftPhoto || uploadedFiles.rightPhoto) {
+            newUser.avatarPhotos = {
+                front: uploadedFiles.frontPhoto || null,
+                left: uploadedFiles.leftPhoto || null,
+                right: uploadedFiles.rightPhoto || null
+            };
+            await newUser.save();
         }
 
         // Create default permissions
