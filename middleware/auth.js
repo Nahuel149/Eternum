@@ -1,5 +1,5 @@
 // middleware/auth.js - Authentication Middleware
-const jwt = require('jsonwebtoken');
+const { verifyToken } = require('../utils/jwt');
 
 const authMiddleware = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -12,7 +12,7 @@ const authMiddleware = (req, res, next) => {
     }
     
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'eternum-secret-key-2025');
+        const decoded = verifyToken(token);
         req.userId = decoded.userId;
         next();
     } catch (error) {
@@ -150,7 +150,7 @@ module.exports = VoiceProcessor;
 // controllers/userController.js - User Controllers
 // ===================================
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const { signLoginToken } = require('../utils/jwt');
 const User = require('../models/User');
 const Avatar = require('../models/Avatar');
 const VoiceProfile = require('../models/VoiceProfile');
@@ -325,7 +325,7 @@ class UserController {
             // await AchievementController.unlock(newUser._id, 'first_steps');
 
             // Generate JWT token
-            const token = jwt.sign(
+            const token = signLoginToken(
                 { userId: newUser._id, username: newUser.username },
                 process.env.JWT_SECRET || 'eternum-secret-key-2025',
                 { expiresIn: '30d' }
@@ -411,7 +411,7 @@ class UserController {
             const avatar = await Avatar.findOne({ userId: user._id });
 
             // Generate token
-            const token = jwt.sign(
+            const token = signLoginToken(
                 { userId: user._id, username: user.username },
                 process.env.JWT_SECRET || 'eternum-secret-key-2025',
                 { expiresIn: '30d' }

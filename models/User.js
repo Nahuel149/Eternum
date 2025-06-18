@@ -214,9 +214,9 @@ UserSchema.virtual('experienceToNextLevel').get(function() {
     return nextLevelExp - this.experience;
 });
 
-// Index for better performance
-UserSchema.index({ email: 1 });
-UserSchema.index({ username: 1 });
+// Index for better performance (email and username already have unique indexes)
+// UserSchema.index({ email: 1 }); // Removed - already unique
+// UserSchema.index({ username: 1 }); // Removed - already unique
 UserSchema.index({ level: -1 });
 UserSchema.index({ memoryCoinBalance: -1 });
 UserSchema.index({ 'settings.privacy': 1 });

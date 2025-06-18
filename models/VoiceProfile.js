@@ -282,8 +282,8 @@ VoiceProfileSchema.virtual('totalTrainingTime').get(function() {
     return this.trainingData.reduce((total, data) => total + (data.duration || 0), 0);
 });
 
-// Index for better performance
-VoiceProfileSchema.index({ userId: 1 });
+// Index for better performance (userId already has unique index)
+// VoiceProfileSchema.index({ userId: 1 }); // Removed - already unique
 VoiceProfileSchema.index({ processingStatus: 1 });
 VoiceProfileSchema.index({ isProcessed: 1 });
 VoiceProfileSchema.index({ 'voiceCharacteristics.language': 1 });

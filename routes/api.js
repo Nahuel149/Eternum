@@ -134,12 +134,8 @@ router.get('/system/version', (req, res) => {
 // WebSocket Events (for real-time features)
 router.get('/websocket/auth', authMiddleware, (req, res) => {
     // Generate temporary token for WebSocket authentication
-    const jwt = require('jsonwebtoken');
-    const wsToken = jwt.sign(
-        { userId: req.userId, type: 'websocket' },
-        process.env.JWT_SECRET || 'eternum-secret-key-2025',
-        { expiresIn: '1h' }
-    );
+    const { signWebSocketToken } = require('../utils/jwt');
+    const wsToken = signWebSocketToken(req.userId);
     
     res.json({
         success: true,

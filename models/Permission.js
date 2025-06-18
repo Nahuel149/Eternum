@@ -362,7 +362,7 @@ PermissionSchema.virtual('blockedUsersCount').get(function() {
 });
 
 // Index for better performance
-PermissionSchema.index({ userId: 1 });
+// PermissionSchema.index({ userId: 1 }); // Removed - already unique
 PermissionSchema.index({ 'globalPermissions.profileVisibility': 1 });
 PermissionSchema.index({ 'blockedUsers.userId': 1 });
 PermissionSchema.index({ 'dataSharing.thirdParty': 1 });

@@ -242,7 +242,7 @@ NotificationSchema.index({ userId: 1, read: 1 });
 NotificationSchema.index({ userId: 1, createdAt: -1 });
 NotificationSchema.index({ type: 1 });
 NotificationSchema.index({ priority: 1 });
-NotificationSchema.index({ expiresAt: 1 });
+// NotificationSchema.index({ expiresAt: 1 }); // Removed - already has TTL index
 NotificationSchema.index({ scheduledFor: 1 });
 NotificationSchema.index({ groupId: 1 });
 NotificationSchema.index({ 'delivery.channels.email': 1 });

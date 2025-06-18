@@ -1,6 +1,6 @@
 // controllers/userController.js - User Controller
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const { signLoginToken } = require('../utils/jwt');
 const User = require('../models/User');
 const Avatar = require('../models/Avatar');
 const VoiceProfile = require('../models/VoiceProfile');
@@ -173,7 +173,7 @@ class UserController {
             await welcomeNotification.save();
 
             // Generate JWT token
-            const token = jwt.sign(
+            const token = signLoginToken(
                 { userId: newUser._id, username: newUser.username },
                 process.env.JWT_SECRET || 'eternum-secret-key-2025',
                 { expiresIn: '30d' }
@@ -257,7 +257,7 @@ class UserController {
             const avatar = await Avatar.findOne({ userId: user._id });
 
             // Generate token
-            const token = jwt.sign(
+            const token = signLoginToken(
                 { userId: user._id, username: user.username },
                 process.env.JWT_SECRET || 'eternum-secret-key-2025',
                 { expiresIn: '30d' }

@@ -277,9 +277,9 @@ AvatarSchema.virtual('customizationCompleteness').get(function() {
     return Math.round((completedFields / totalFields) * 100);
 });
 
-// Index for better performance
-AvatarSchema.index({ userId: 1 });
-AvatarSchema.index({ avaturnId: 1 });
+// Index for better performance (userId and avaturnId already have unique indexes)
+// AvatarSchema.index({ userId: 1 }); // Removed - already unique
+// AvatarSchema.index({ avaturnId: 1 }); // Removed - already unique
 AvatarSchema.index({ lastModified: -1 });
 AvatarSchema.index({ 'savedOutfits.isPublic': 1 });
 
