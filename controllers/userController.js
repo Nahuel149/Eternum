@@ -57,8 +57,19 @@ class UserController {
             // Hash password
             const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_ROUNDS) || 10);
 
-            // File uploads handled in server.js with Cloudinary
+            // Process file uploads
             const avatarPhotos = {};
+            if (req.files) {
+                if (req.files.frontPhoto) {
+                    avatarPhotos.front = req.files.frontPhoto[0].path; // Cloudinary URL
+                }
+                if (req.files.leftPhoto) {
+                    avatarPhotos.leftSide = req.files.leftPhoto[0].path; // Cloudinary URL
+                }
+                if (req.files.rightPhoto) {
+                    avatarPhotos.rightSide = req.files.rightPhoto[0].path; // Cloudinary URL
+                }
+            }
 
             // Parse hobbies if it's a string
             const parsedHobbies = typeof hobbies === 'string' ? JSON.parse(hobbies) : hobbies;
@@ -104,7 +115,30 @@ class UserController {
 
             await newAvatar.save();
 
-            // Voice recording upload handled in server.js with Cloudinary
+            // Process voice recording
+            if (req.files && req.files.voiceRecording) {
+                const voiceFile = req.files.voiceRecording[0];
+                const voiceUrl = voiceFile.path; // Cloudinary URL
+                
+                // Analyze voice characteristics
+                const voiceCharacteristics = await VoiceProcessor.analyzeVoice(voiceUrl);
+                const aiVoiceModelId = await VoiceProcessor.generateVoiceModelId(newUser._id, voiceCharacteristics);
+                
+                const voiceProfile = new VoiceProfile({
+                    userId: newUser._id,
+                    recordingUrl: voiceUrl,
+                    recordingDuration: 30,
+                    recordingText: "Welcome to Eternum, where memories transcend time and space...",
+                    voiceCharacteristics,
+                    aiVoiceModelId,
+                    isProcessed: false // Will be processed asynchronously
+                });
+
+                await voiceProfile.save();
+                
+                // Queue voice processing job (implement with Bull/RabbitMQ in production)
+                // await queueVoiceProcessing(voiceProfile._id);
+            }
 
             // Create default permissions
             const permissions = new Permission({
@@ -223,11 +257,7 @@ class UserController {
             const avatar = await Avatar.findOne({ userId: user._id });
 
             // Generate token
-            const token = signLoginToken(
-                { userId: user._id, username: user.username },
-                process.env.JWT_SECRET || 'eternum-secret-key-2025',
-                { expiresIn: '30d' }
-            );
+            const token = signLoginToken(user._id);
 
             // Check for unread notifications
             const unreadNotifications = await Notification.countDocuments({
