@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
@@ -273,7 +274,6 @@ app.post('/api/register', upload.fields([
         await welcomeNotification.save();
 
         // Generate JWT token
-        const jwt = require('jsonwebtoken');
         const token = jwt.sign(
             { userId: newUser._id, timestamp: Date.now() },
             process.env.JWT_SECRET || 'eternum-secret-key-2025',
@@ -318,7 +318,6 @@ app.post('/api/login', async (req, res) => {
     try {
         const User = require('./models/User');
         const bcrypt = require('bcrypt');
-        const jwt = require('jsonwebtoken');
 
         const { emailOrUsername, password } = req.body;
 
