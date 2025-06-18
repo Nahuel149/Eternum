@@ -10,7 +10,7 @@ const VoiceController = require('../controllers/voiceController');
 
 // Import middleware
 const authMiddleware = require('../middleware/auth');
-const { upload } = require('../utils/fileUpload');
+const { upload } = require('../config/cloudinary');
 
 // Public routes (no authentication required)
 router.get('/health', (req, res) => {

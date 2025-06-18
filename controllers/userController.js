@@ -57,19 +57,8 @@ class UserController {
             // Hash password
             const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_ROUNDS) || 10);
 
-            // Process file uploads
+            // File uploads handled in server.js with Cloudinary
             const avatarPhotos = {};
-            if (req.files) {
-                if (req.files.frontPhoto) {
-                    avatarPhotos.front = req.files.frontPhoto[0].location || req.files.frontPhoto[0].path;
-                }
-                if (req.files.leftPhoto) {
-                    avatarPhotos.leftSide = req.files.leftPhoto[0].location || req.files.leftPhoto[0].path;
-                }
-                if (req.files.rightPhoto) {
-                    avatarPhotos.rightSide = req.files.rightPhoto[0].location || req.files.rightPhoto[0].path;
-                }
-            }
 
             // Parse hobbies if it's a string
             const parsedHobbies = typeof hobbies === 'string' ? JSON.parse(hobbies) : hobbies;
@@ -115,30 +104,7 @@ class UserController {
 
             await newAvatar.save();
 
-            // Process voice recording
-            if (req.files && req.files.voiceRecording) {
-                const voiceFile = req.files.voiceRecording[0];
-                const voiceUrl = voiceFile.location || voiceFile.path;
-                
-                // Analyze voice characteristics
-                const voiceCharacteristics = await VoiceProcessor.analyzeVoice(voiceUrl);
-                const aiVoiceModelId = await VoiceProcessor.generateVoiceModelId(newUser._id, voiceCharacteristics);
-                
-                const voiceProfile = new VoiceProfile({
-                    userId: newUser._id,
-                    recordingUrl: voiceUrl,
-                    recordingDuration: 30,
-                    recordingText: "Welcome to Eternum, where memories transcend time and space...",
-                    voiceCharacteristics,
-                    aiVoiceModelId,
-                    isProcessed: false // Will be processed asynchronously
-                });
-
-                await voiceProfile.save();
-                
-                // Queue voice processing job (implement with Bull/RabbitMQ in production)
-                // await queueVoiceProcessing(voiceProfile._id);
-            }
+            // Voice recording upload handled in server.js with Cloudinary
 
             // Create default permissions
             const permissions = new Permission({

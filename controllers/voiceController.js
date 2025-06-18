@@ -86,7 +86,7 @@ class VoiceController {
                 });
             }
 
-            const voiceUrl = req.file.location || req.file.path;
+            const voiceUrl = req.file.path; // Cloudinary URL handled in middleware
             const { text, duration } = req.body;
 
             let voiceProfile = await VoiceProfile.findOne({ userId: req.params.userId });
@@ -244,7 +244,7 @@ class VoiceController {
                 });
             }
 
-            const voiceUrl = req.file.location || req.file.path;
+            const voiceUrl = req.file.path; // Cloudinary URL handled in middleware
             const { text, quality = 0.8 } = req.body;
 
             const voiceProfile = await VoiceProfile.findOne({ userId: req.params.userId });
