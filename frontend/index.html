@@ -1306,8 +1306,12 @@
     </section>
 
     <script>
-        // Configuration
-        const API_URL = 'http://localhost:3000/api'; // Backend API URL
+        // Configuration - Auto-detect environment
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000/api'  // Local development
+            : `${window.location.protocol}//${window.location.hostname}/api`;  // Production (same domain)
+        
+        console.log('🔗 API URL detected:', API_URL);
         
         // Generate particles
         const particlesContainer = document.getElementById('particles');
