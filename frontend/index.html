@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eternum - Where Digital Memories Live Forever</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-purple: #8B5CF6;
+            --primary-blue: #3B82F6;
+            --dark-bg: #0A0A0F;
+            --darker-bg: #1A1A2E; /* Used for option background */
+            --light-text: #E5E7EB;
+            --muted-text: #9CA3AF;
+            --accent-pink: #EC4899;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-bg: #1A1A2E;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark-bg);
+            color: var(--light-text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%),
+                        radial-gradient(ellipse at bottom left, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at top right, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(139, 92, 246, 0.5);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            from { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            to { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 80px; /* Logo size increased */
+            width: auto;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a {
+            color: var(--muted-text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-purple);
+        }
+        
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.3);
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .cta-button-secondary {
+            background-color: transparent;
+            color: var(--light-text);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .cta-button-secondary:hover {
+            background-color: var(--glass-bg);
+            border-color: var(--primary-purple);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 6rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        /* Consistent Gradient Text for Headers */
+        .hero-text h1,
+        .section-title,
+        .about-container h3,
+        .waitlist-form h2,
+        .contact-info h2,
+        .contact-info h3,
+        .registration-card h2,
+        .floating-card h2 {
+            background: linear-gradient(135deg, var(--light-text), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-text .subtitle {
+            font-size: 1.25rem;
+            color: var(--muted-text);
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: var(--muted-text);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* Welcome Card */
+        .floating-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: float-card 6s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        @keyframes float-card {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Registration Card */
+        .registration-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .registration-card h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Registration Form */
+        .registration-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            color: var(--light-text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        /* Dropdown Specific Styling */
+        select:required:invalid {
+            color: var(--muted-text);
+        }
+        select option {
+            background: var(--darker-bg);
+            color: var(--light-text);
+        }
+        select option[value=""] {
+            color: var(--muted-text);
+        }
+
+        /* Voice Recording Section */
+        .voice-recorder {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .recording-phrase {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            font-size: 1rem;
+            line-height: 1.8;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: var(--muted-text);
+        }
+
+        .record-button {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .record-button.recording {
+            background: linear-gradient(135deg, #10B981, #059669);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(16, 185, 129, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        .recording-timer {
+            margin-top: 1rem;
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--primary-purple);
+        }
+
+        /* Progress Indicators */
+        .progress-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 2rem; /* Adjusted from 3rem to 2rem for better fit */
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active { color: var(--primary-purple); }
+        .progress-step.completed { color: var(--primary-blue); }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .progress-step.active .step-number { background: var(--primary-purple); border-color: var(--primary-purple); color: white; }
+        .progress-step.completed .step-number { background: var(--primary-blue); border-color: var(--primary-blue); color: white; }
+
+        /* Zodiac Sign Selector */
+        .zodiac-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .zodiac-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .zodiac-option:hover {
+            border-color: var(--primary-purple);
+            transform: scale(1.05);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .zodiac-option.selected {
+            border-color: var(--primary-purple);
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        .zodiac-symbol {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .zodiac-name {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        /* Hobbies Tags */
+        .hobbies-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .hobby-tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .hobby-tag:hover {
+            border-color: var(--primary-purple);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .hobby-tag.selected {
+            background: var(--primary-purple);
+            border-color: var(--primary-purple);
+        }
+
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .nav-button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .nav-button:hover {
+            border-color: var(--primary-purple);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .nav-button.primary {
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            border: none;
+            color: white;
+        }
+
+        .nav-button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Loading State */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Success State */
+        .success-animation {
+            font-size: 4rem;
+            animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Error States */
+        .error-message {
+            color: #EF4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .form-group.error input {
+            border-color: #EF4444;
+        }
+
+        /* Avatar Photo Upload */
+        .photo-upload-section {
+            margin-top: 1.5rem;
+        }
+
+        .photo-upload-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .photo-upload-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-upload-box:hover {
+            border-color: var(--primary-purple);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .photo-upload-box.has-image {
+            border-style: solid;
+            border-color: var(--primary-purple);
+        }
+
+        .photo-upload-box input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .photo-preview {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 0.5rem;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--muted-text);
+        }
+
+        .upload-label {
+            font-size: 0.875rem;
+            color: var(--muted-text);
+        }
+        
+        /* Generic Section Styling */
+        .section-padding { padding: 6rem 2rem; }
+        .section-title { text-align: center; font-size: 3rem; margin-bottom: 1rem; }
+        .section-subtitle { text-align: center; color: var(--muted-text); max-width: 700px; margin: 0 auto 4rem; }
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        /* Features Section */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+        .feature-card {
+            background: var(--card-bg); border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 15px; padding: 2rem; transition: all 0.3s ease; position: relative; overflow: hidden;
+        }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--primary-purple); }
+        .feature-icon {
+            width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            border-radius: 15px; display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.5rem; font-size: 1.5rem;
+        }
+        .feature-card h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .feature-card p { color: var(--muted-text); line-height: 1.6; }
+        
+        /* About Section */
+        .about-container { text-align: center; }
+        .about h3 { font-size: 2rem; margin-top: 4rem; margin-bottom: 1rem; }
+        .about p { max-width: 800px; margin: 0 auto 2rem; color: var(--muted-text); }
+        
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem; max-width: 1000px; margin: 4rem auto;
+        }
+        .stat-item {
+            background: var(--glass-bg); padding: 2rem; border-radius: 15px;
+            border: 1px solid var(--glass-border);
+        }
+        .stat-item .number {
+            font-size: 2.5rem; font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .stat-item .label { margin-top: 0.5rem; color: var(--muted-text); }
+
+        .timeline { max-width: 800px; margin: 4rem auto; text-align: left; }
+        .timeline-item {
+            background: var(--card-bg); padding: 2rem; border-radius: 15px;
+            border-left: 4px solid var(--primary-purple); margin-bottom: 2rem;
+        }
+        .timeline-item h4 { font-size: 1.5rem; color: var(--primary-purple); margin-bottom: 0.5rem; }
+        
+        /* Contact Section */
+        .contact-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+            align-items: flex-start;
+        }
+        .contact h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .contact p { color: var(--muted-text); }
+        .contact-info { align-self: center; }
+        .contact-info-item { margin-bottom: 1.5rem; }
+        .contact-info-item label { display: block; font-weight: 600; color: var(--primary-purple); margin-bottom: 0.5rem; }
+        .contact-info-item p, .contact-info-item a { color: var(--muted-text); text-decoration: none; }
+        .contact-info-item a:hover { color: var(--light-text); }
+        
+        .social-media a {
+            margin-right: 1.5rem;
+            font-size: 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .social-media a svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Language Selector for Voice Recording */
+        .language-selector {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .language-selector label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--muted-text);
+            font-size: 0.9rem;
+        }
+
+        .lang-button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            margin: 0 0.5rem;
+        }
+
+        .lang-button:hover {
+            border-color: var(--primary-purple);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .lang-button.active {
+            background: var(--primary-purple);
+            border-color: var(--primary-purple);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1100px) {
+            .nav-links { display: none; }
+        }
+        @media (max-width: 968px) {
+            .hero-content, .contact-grid { grid-template-columns: 1fr; }
+            .hero-text { text-align: center; }
+            .hero-text h1 { font-size: 2.5rem; }
+            .registration-card, .floating-card { margin: 2rem auto 0; }
+            .features-grid { grid-template-columns: 1fr; }
+            .progress-indicators {
+                gap: 1.5rem;
+                flex-wrap: wrap;
+            }
+            .progress-step span { display: none; }
+            .contact-grid { gap: 3rem; }
+            .cta-button-secondary { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <header>
+        <nav>
+            <a href="/" class="logo">
+                <img src="https://i.ibb.co/Mky5Tbtx/Eternum-logo-horizontal-removebg-preview.png" alt="Eternum Logo">
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="header-buttons">
+                <a href="#" class="cta-button-secondary">Enter to Eternum</a>
+                <a href="#hero" class="cta-button" onclick="startRegistration()">Get Started</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="subtitle">Welcome to the Future</div>
+                <h1>Where Digital Memories Live Forever</h1>
+                <p>Create your photorealistic 3D avatar and step into a revolutionary metaverse where AI-powered interactions, immersive environments, and eternal connections await. Your digital legacy begins here.</p>
+                <button class="cta-button" onclick="startRegistration()">Begin Your Journey</button>
+            </div>
+            
+            <div class="hero-visual-content">
+                <div class="floating-card" id="welcomeCard" onclick="startRegistration()">
+                    <h2>Ready to Begin?</h2>
+                    <p>Join thousands who are already building their digital legacy in Eternum.</p>
+                    <div style="margin-top: 2rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div class="feature-icon">🎭</div>
+                            <div>
+                                <strong>Photorealistic Avatars</strong>
+                                <p style="font-size: 0.9rem; color: var(--muted-text);">Create from selfies</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div class="feature-icon">🤖</div>
+                            <div>
+                                <strong>AI Companions</strong>
+                                <p style="font-size: 0.9rem; color: var(--muted-text);">Intelligent interactions</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="feature-icon">🌆</div>
+                            <div>
+                                <strong>8 Virtual Worlds</strong>
+                                <p style="font-size: 0.9rem; color: var(--muted-text);">Explore diverse environments</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="registration-card" id="registrationCard" style="display: none;">
+                    <h2>Create Your Digital Identity</h2>
+                    <form class="registration-form" id="registrationForm" onsubmit="handleFormSubmit(event)">
+                        <div class="form-step active" id="step1">
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" required placeholder="your@email.com">
+                                <span class="error-message" id="emailError"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" name="username" required placeholder="Choose a unique username" pattern="^[a-zA-Z0-9_]{3,20}$">
+                                <span class="error-message" id="usernameError"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" required placeholder="John Doe">
+                                <span class="error-message" id="fullNameError"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Create Password</label>
+                                <input type="password" id="password" name="password" required placeholder="••••••••" minlength="8">
+                                <span class="error-message" id="passwordError"></span>
+                            </div>
+                        </div>
+    
+                        <div class="form-step" id="step2">
+                            <div class="form-group">
+                                <label for="birthdate">Birth Date</label>
+                                <input type="date" id="birthdate" name="birthdate" required max="">
+                                <span class="error-message" id="birthdateError"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Select Your Zodiac Sign</label>
+                                <div class="zodiac-grid">
+                                    <div class="zodiac-option" data-sign="aries"><div class="zodiac-symbol">♈</div><div class="zodiac-name">Aries</div></div>
+                                    <div class="zodiac-option" data-sign="taurus"><div class="zodiac-symbol">♉</div><div class="zodiac-name">Taurus</div></div>
+                                    <div class="zodiac-option" data-sign="gemini"><div class="zodiac-symbol">♊</div><div class="zodiac-name">Gemini</div></div>
+                                    <div class="zodiac-option" data-sign="cancer"><div class="zodiac-symbol">♋</div><div class="zodiac-name">Cancer</div></div>
+                                    <div class="zodiac-option" data-sign="leo"><div class="zodiac-symbol">♌</div><div class="zodiac-name">Leo</div></div>
+                                    <div class="zodiac-option" data-sign="virgo"><div class="zodiac-symbol">♍</div><div class="zodiac-name">Virgo</div></div>
+                                    <div class="zodiac-option" data-sign="libra"><div class="zodiac-symbol">♎</div><div class="zodiac-name">Libra</div></div>
+                                    <div class="zodiac-option" data-sign="scorpio"><div class="zodiac-symbol">♏</div><div class="zodiac-name">Scorpio</div></div>
+                                    <div class="zodiac-option" data-sign="sagittarius"><div class="zodiac-symbol">♐</div><div class="zodiac-name">Sagittarius</div></div>
+                                    <div class="zodiac-option" data-sign="capricorn"><div class="zodiac-symbol">♑</div><div class="zodiac-name">Capricorn</div></div>
+                                    <div class="zodiac-option" data-sign="aquarius"><div class="zodiac-symbol">♒</div><div class="zodiac-name">Aquarius</div></div>
+                                    <div class="zodiac-option" data-sign="pisces"><div class="zodiac-symbol">♓</div><div class="zodiac-name">Pisces</div></div>
+                                </div>
+                            </div>
+                            <div class="photo-upload-section">
+                                <label>Avatar Photos (Optional)</label>
+                                <p style="color: var(--muted-text); font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    Upload 3 photos for AI avatar creation without entering the game
+                                </p>
+                                <div class="photo-upload-grid">
+                                    <div class="photo-upload-box" id="frontPhotoBox">
+                                        <input type="file" id="frontPhoto" accept="image/*" onchange="handlePhotoUpload(event, 'front')">
+                                        <div class="upload-icon">📷</div><div class="upload-label">Front View</div>
+                                    </div>
+                                    <div class="photo-upload-box" id="leftPhotoBox">
+                                        <input type="file" id="leftPhoto" accept="image/*" onchange="handlePhotoUpload(event, 'left')">
+                                        <div class="upload-icon">📷</div><div class="upload-label">Left Side</div>
+                                    </div>
+                                    <div class="photo-upload-box" id="rightPhotoBox">
+                                        <input type="file" id="rightPhoto" accept="image/*" onchange="handlePhotoUpload(event, 'right')">
+                                        <div class="upload-icon">📷</div><div class="upload-label">Right Side</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="form-step" id="step3">
+                            <div class="form-group">
+                                <label>Select Your Hobbies & Interests</label>
+                                <div class="hobbies-container">
+                                    <span class="hobby-tag" data-hobby="gaming">🎮 Gaming</span>
+                                    <span class="hobby-tag" data-hobby="music">🎵 Music</span>
+                                    <span class="hobby-tag" data-hobby="art">🎨 Art</span>
+                                    <span class="hobby-tag" data-hobby="sports">⚽ Sports</span>
+                                    <span class="hobby-tag" data-hobby="cooking">🍳 Cooking</span>
+                                    <span class="hobby-tag" data-hobby="travel">✈️ Travel</span>
+                                    <span class="hobby-tag" data-hobby="reading">📚 Reading</span>
+                                    <span class="hobby-tag" data-hobby="technology">💻 Technology</span>
+                                    <span class="hobby-tag" data-hobby="fashion">👗 Fashion</span>
+                                    <span class="hobby-tag" data-hobby="fitness">💪 Fitness</span>
+                                    <span class="hobby-tag" data-hobby="photography">📸 Photography</span>
+                                    <span class="hobby-tag" data-hobby="movies">🎬 Movies</span>
+                                    <span class="hobby-tag" data-hobby="nature">🌿 Nature</span>
+                                    <span class="hobby-tag" data-hobby="pets">🐾 Pets</span>
+                                    <span class="hobby-tag" data-hobby="dancing">💃 Dancing</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="customInterests">Other Interests</label>
+                                <textarea id="customInterests" name="customInterests" rows="3" placeholder="Tell us about your other interests..."></textarea>
+                            </div>
+                        </div>
+    
+                        <div class="form-step" id="step4">
+                            <div class="voice-recorder">
+                                <h3>Record Your Voice</h3>
+                                <p style="color: var(--muted-text); margin-bottom: 1rem;">Please read the following text aloud. This helps us create your unique voice profile.</p>
+                                
+                                <div class="language-selector">
+                                    <label>Select Recording Language</label>
+                                    <div>
+                                        <button type="button" class="lang-button active" id="lang-en">English</button>
+                                        <button type="button" class="lang-button" id="lang-es">Español</button>
+                                    </div>
+                                </div>
+
+                                <div class="recording-phrase" id="recordingPhrase">
+                                </div>
+                                <button type="button" class="record-button" id="recordButton" onclick="toggleRecording()">
+                                    🎤 Start Recording
+                                </button>
+                                <div class="recording-timer" id="recordingTimer" style="display: none;">0:00</div>
+                            </div>
+                        </div>
+    
+                        <div class="form-navigation">
+                            <button type="button" class="nav-button" id="prevButton" onclick="previousStep()" style="display: none;">Previous</button>
+                            <button type="button" class="nav-button primary" id="nextButton" onclick="nextStep()">Next</button>
+                        </div>
+                    </form>
+
+                    <div class="progress-indicators">
+                        <div class="progress-step active" id="progressStep1"><div class="step-number">1</div><span>Account</span></div>
+                        <div class="progress-step" id="progressStep2"><div class="step-number">2</div><span>Personal</span></div>
+                        <div class="progress-step" id="progressStep3"><div class="step-number">3</div><span>Interests</span></div>
+                        <div class="progress-step" id="progressStep4"><div class="step-number">4</div><span>Voice</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features section-padding" id="features">
+        <div class="container">
+            <h2 class="section-title">Experience the Metaverse</h2>
+            <p class="section-subtitle">Eternum combines cutting-edge technology with human connection to create unforgettable experiences.</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👤</div>
+                    <h3>Avatar Creation</h3>
+                    <p>Transform your selfie into a stunning 3D avatar using Avaturn's advanced AI technology. Express yourself with customizable clothing and accessories.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏙️</div>
+                    <h3>Living Environments</h3>
+                    <p>Explore offices, cafes, apartments, nightclubs, and restaurants. Each location offers unique experiences and social opportunities.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>AI Conversations</h3>
+                    <p>Meet Ricardo Darín and other AI personalities. Engage in meaningful conversations powered by advanced language models.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎬</div>
+                    <h3>Shared Experiences</h3>
+                    <p>Watch videos together, discuss content with AI companions, and create memories that last forever in the digital realm.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚗</div>
+                    <h3>Dynamic World</h3>
+                    <p>Drive vehicles, interact with objects, and experience realistic physics in a world that responds to your every action.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">♾️</div>
+                    <h3>Eternal Legacy</h3>
+                    <p>Your digital presence persists across sessions. Build relationships, customize spaces, and create a lasting impact.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about section-padding about-container" id="about">
+        <div class="container">
+            <h2 class="section-title">Discover</h2>
+            <p class="section-subtitle">Explore the Story Behind Eternum’s Innovation and Legacy</p>
+
+            <h3>Our Mission and Vision</h3>
+            <p>Imagine a world where your essence and stories never fade. Eternum World enables you to create dynamic digital personas of yourself and loved ones, capturing memories and interactions that last forever. These representations can also be used in life, where the essence of who you are transcends the limitations of time and space.<br>We’ve helped families immortalize their memories, fostering emotional connections across time and generations.</p>
+        
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="number">3,136+</div>
+                    <div class="label">Users testing interface</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">700+</div>
+                    <div class="label">Avatars created</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">2,000+</div>
+                    <div class="label">Users waitlist</div>
+                </div>
+                 <div class="stat-item">
+                    <div class="number">33%</div>
+                    <div class="label">Projected AI achieved</div>
+                </div>
+            </div>
+
+            <h3>Our Journey</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>Year 2024</h4>
+                    <p>Eternum unveiled the pioneering interactive digital memory creation platform to revolutionize preservation techniques. This innovative platform not only preserves memories but also serves as a social network, opening up new realms of experiences and opportunities in virtual reality (VR).</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Year 2023</h4>
+                    <p>Following extensive research, investigation, and field studies, the product was carefully curated and development commenced. The progress in artificial intelligence has enabled possibilities that were previously considered unimaginable just a few years ago.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Year 2022</h4>
+                    <p>The team at Eternum was formed through a shared purpose, uniting individuals with diverse expertise including technology innovators, psychologists, designers, entrepreneurs, as well as medical and philosophical professionals.</p>
+                </div>
+                 <div class="timeline-item">
+                    <h4>Year 2021</h4>
+                    <p>The passing of a cherished family member of one of Eternum’s founders inspired the drive for innovation in memory conservation, shaping the future of emotional bonds for future generations.</p>
+                </div>
+            </div>
+
+            <h3>Who are we?</h3>
+            <p>The Eternum team has been developed, funded, and driven by various collaborators committed to ensuring its long-term success. Among them are experts in technology, psychologists, designers, entrepreneurs, doctors, philosophers, artists, and Space Computing engineers. The project has been developing with its own momentum and is getting closer every day…</p>
+        </div>
+    </section>
+
+    <section class="contact section-padding" id="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="waitlist-form">
+                    <h2>Join the waiting list</h2>
+                    <p style="margin-bottom: 1rem;">Unfortunately we have ran out of spots to test Eternum. But soon we will be opening up more.</p>
+                    <p style="margin-bottom: 2rem;">Sign up to be notified when we have the next available spot!</p>
+                    <form>
+                        <div class="form-group">
+                            <input type="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Enter your first name" required>
+                        </div>
+                         <div class="form-group">
+                            <input type="text" placeholder="Enter your last name" required>
+                        </div>
+                        <div class="form-group">
+                            <select required>
+                                <option value="" disabled selected>Choose your country</option>
+                                <option value="AF">Afghanistan</option>
+                                <option value="AL">Albania</option>
+                                <option value="DZ">Algeria</option>
+                                <option value="AD">Andorra</option>
+                                <option value="AO">Angola</option>
+                                <option value="AG">Antigua and Barbuda</option>
+                                <option value="AR">Argentina</option>
+                                <option value="AM">Armenia</option>
+                                <option value="AU">Australia</option>
+                                <option value="AT">Austria</option>
+                                <option value="AZ">Azerbaijan</option>
+                                <option value="BS">Bahamas</option>
+                                <option value="BH">Bahrain</option>
+                                <option value="BD">Bangladesh</option>
+                                <option value="BB">Barbados</option>
+                                <option value="BY">Belarus</option>
+                                <option value="BE">Belgium</option>
+                                <option value="BZ">Belize</option>
+                                <option value="BJ">Benin</option>
+                                <option value="BT">Bhutan</option>
+                                <option value="BO">Bolivia</option>
+                                <option value="BA">Bosnia and Herzegovina</option>
+                                <option value="BW">Botswana</option>
+                                <option value="BR">Brazil</option>
+                                <option value="BN">Brunei</option>
+                                <option value="BG">Bulgaria</option>
+                                <option value="BF">Burkina Faso</option>
+                                <option value="BI">Burundi</option>
+                                <option value="CV">Cabo Verde</option>
+                                <option value="KH">Cambodia</option>
+                                <option value="CM">Cameroon</option>
+                                <option value="CA">Canada</option>
+                                <option value="CF">Central African Republic</option>
+                                <option value="TD">Chad</option>
+                                <option value="CL">Chile</option>
+                                <option value="CN">China</option>
+                                <option value="CO">Colombia</option>
+                                <option value="KM">Comoros</option>
+                                <option value="CG">Congo, Republic of the</option>
+                                <option value="CD">Congo, Democratic Republic of the</option>
+                                <option value="CR">Costa Rica</option>
+                                <option value="HR">Croatia</option>
+                                <option value="CU">Cuba</option>
+                                <option value="CY">Cyprus</option>
+                                <option value="CZ">Czechia</option>
+                                <option value="CI">Côte d'Ivoire</option>
+                                <option value="DK">Denmark</option>
+                                <option value="DJ">Djibouti</option>
+                                <option value="DM">Dominica</option>
+                                <option value="DO">Dominican Republic</option>
+                                <option value="EC">Ecuador</option>
+                                <option value="EG">Egypt</option>
+                                <option value="SV">El Salvador</option>
+                                <option value="GQ">Equatorial Guinea</option>
+                                <option value="ER">Eritrea</option>
+                                <option value="EE">Estonia</option>
+                                <option value="SZ">Eswatini</option>
+                                <option value="ET">Ethiopia</option>
+                                <option value="FJ">Fiji</option>
+                                <option value="FI">Finland</option>
+                                <option value="FR">France</option>
+                                <option value="GA">Gabon</option>
+                                <option value="GM">Gambia</option>
+                                <option value="GE">Georgia</option>
+                                <option value="DE">Germany</option>
+                                <option value="GH">Ghana</option>
+                                <option value="GR">Greece</option>
+                                <option value="GD">Grenada</option>
+                                <option value="GT">Guatemala</option>
+                                <option value="GN">Guinea</option>
+                                <option value="GW">Guinea-Bissau</option>
+                                <option value="GY">Guyana</option>
+                                <option value="HT">Haiti</option>
+                                <option value="HN">Honduras</option>
+                                <option value="HU">Hungary</option>
+                                <option value="IS">Iceland</option>
+                                <option value="IN">India</option>
+                                <option value="ID">Indonesia</option>
+                                <option value="IR">Iran</option>
+                                <option value="IQ">Iraq</option>
+                                <option value="IE">Ireland</option>
+                                <option value="IL">Israel</option>
+                                <option value="IT">Italy</option>
+                                <option value="JM">Jamaica</option>
+                                <option value="JP">Japan</option>
+                                <option value="JO">Jordan</option>
+                                <option value="KZ">Kazakhstan</option>
+                                <option value="KE">Kenya</option>
+                                <option value="KI">Kiribati</option>
+                                <option value="KW">Kuwait</option>
+                                <option value="KG">Kyrgyzstan</option>
+                                <option value="LA">Laos</option>
+                                <option value="LV">Latvia</option>
+                                <option value="LB">Lebanon</option>
+                                <option value="LS">Lesotho</option>
+                                <option value="LR">Liberia</option>
+                                <option value="LY">Libya</option>
+                                <option value="LI">Liechtenstein</option>
+                                <option value="LT">Lithuania</option>
+                                <option value="LU">Luxembourg</option>
+                                <option value="MG">Madagascar</option>
+                                <option value="MW">Malawi</option>
+                                <option value="MY">Malaysia</option>
+                                <option value="MV">Maldives</option>
+                                <option value="ML">Mali</option>
+                                <option value="MT">Malta</option>
+                                <option value="MH">Marshall Islands</option>
+                                <option value="MR">Mauritania</option>
+                                <option value="MU">Mauritius</option>
+                                <option value="MX">Mexico</option>
+                                <option value="FM">Micronesia</option>
+                                <option value="MD">Moldova</option>
+                                <option value="MC">Monaco</option>
+                                <option value="MN">Mongolia</option>
+                                <option value="ME">Montenegro</option>
+                                <option value="MA">Morocco</option>
+                                <option value="MZ">Mozambique</option>
+                                <option value="MM">Myanmar</option>
+                                <option value="NA">Namibia</option>
+                                <option value="NR">Nauru</option>
+                                <option value="NP">Nepal</option>
+                                <option value="NL">Netherlands</option>
+                                <option value="NZ">New Zealand</option>
+                                <option value="NI">Nicaragua</option>
+                                <option value="NE">Niger</option>
+                                <option value="NG">Nigeria</option>
+                                <option value="KP">North Korea</option>
+                                <option value="MK">North Macedonia</option>
+                                <option value="NO">Norway</option>
+                                <option value="OM">Oman</option>
+                                <option value="PK">Pakistan</option>
+                                <option value="PW">Palau</option>
+                                <option value="PS">Palestine State</option>
+                                <option value="PA">Panama</option>
+                                <option value="PG">Papua New Guinea</option>
+                                <option value="PY">Paraguay</option>
+                                <option value="PE">Peru</option>
+                                <option value="PH">Philippines</option>
+                                <option value="PL">Poland</option>
+                                <option value="PT">Portugal</option>
+                                <option value="QA">Qatar</option>
+                                <option value="RO">Romania</option>
+                                <option value="RU">Russia</option>
+                                <option value="RW">Rwanda</option>
+                                <option value="KN">Saint Kitts and Nevis</option>
+                                <option value="LC">Saint Lucia</option>
+                                <option value="VC">Saint Vincent and the Grenadines</option>
+                                <option value="WS">Samoa</option>
+                                <option value="SM">San Marino</option>
+                                <option value="ST">Sao Tome and Principe</option>
+                                <option value="SA">Saudi Arabia</option>
+                                <option value="SN">Senegal</option>
+                                <option value="RS">Serbia</option>
+                                <option value="SC">Seychelles</option>
+                                <option value="SL">Sierra Leone</option>
+                                <option value="SG">Singapore</option>
+                                <option value="SK">Slovakia</option>
+                                <option value="SI">Slovenia</option>
+                                <option value="SB">Solomon Islands</option>
+                                <option value="SO">Somalia</option>
+                                <option value="ZA">South Africa</option>
+                                <option value="KR">South Korea</option>
+                                <option value="SS">South Sudan</option>
+                                <option value="ES">Spain</option>
+                                <option value="LK">Sri Lanka</option>
+                                <option value="SD">Sudan</option>
+                                <option value="SR">Suriname</option>
+                                <option value="SE">Sweden</option>
+                                <option value="CH">Switzerland</option>
+                                <option value="SY">Syria</option>
+                                <option value="TW">Taiwan</option>
+                                <option value="TJ">Tajikistan</option>
+                                <option value="TZ">Tanzania</option>
+                                <option value="TH">Thailand</option>
+                                <option value="TL">Timor-Leste</option>
+                                <option value="TG">Togo</option>
+                                <option value="TO">Tonga</option>
+                                <option value="TT">Trinidad and Tobago</option>
+                                <option value="TN">Tunisia</option>
+                                <option value="TR">Turkey</option>
+                                <option value="TM">Turkmenistan</option>
+                                <option value="TV">Tuvalu</option>
+                                <option value="UG">Uganda</option>
+                                <option value="UA">Ukraine</option>
+                                <option value="AE">United Arab Emirates</option>
+                                <option value="GB">United Kingdom</option>
+                                <option value="US">United States</option>
+                                <option value="UY">Uruguay</option>
+                                <option value="UZ">Uzbekistan</option>
+                                <option value="VU">Vanuatu</option>
+                                <option value="VE">Venezuela</option>
+                                <option value="VN">Vietnam</option>
+                                <option value="YE">Yemen</option>
+                                <option value="ZM">Zambia</option>
+                                <option value="ZW">Zimbabwe</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                             <input type="text" placeholder="How did you hear from us? (Youtube, LinkedIn, TikTok, etc)">
+                        </div>
+                         <div class="form-group">
+                            <textarea rows="3" placeholder="What interests you more about Eternum World?"></textarea>
+                        </div>
+                        <button type="submit" class="cta-button" style="width: 100%;">Join the list</button>
+                    </form>
+                </div>
+                <div class="contact-info">
+                     <h2>Get in Touch</h2>
+                     <p style="margin-bottom: 3rem;">Connect with Us for Any Inquiries or Assistance</p>
+                     <h3>Contact Us Today</h3>
+                     <p style="margin-bottom: 2rem;">We’re here to help with any questions or support you may need.</p>
+                     
+                     <div class="contact-info-item">
+                         <label>Email</label>
+                         <p><a href="mailto:hello@eternum.world">hello@eternum.world</a></p>
+                     </div>
+                     <div class="contact-info-item">
+                         <label>Address</label>
+                         <p>2999 NE 191 SUITE 702. Aventura, Florida. US</p>
+                     </div>
+                     <div class="contact-info-item">
+                         <label>Social Media</label>
+                         <div class="social-media">
+                            <a href="https://www.linkedin.com/in/eternum-world/" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                                <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                                <span>LinkedIn</span>
+                            </a>
+                            <a href="https://www.tiktok.com/@eternum.world?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" title="TikTok">
+                                <svg viewBox="0 0 24 24"><path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-1.448 4.793 4.793 0 0 1-1.448-3.77 4.793 4.793 0 0 1 1.448-3.77 4.793 4.793 0 0 1 3.77-1.448v2.896a1.898 1.898 0 0 0-1.898 1.898 1.898 1.898 0 0 0 1.898 1.898v2.896zm-4.335 1.398a7.689 7.689 0 0 0-1.573-4.521 7.689 7.689 0 0 0-4.521-1.573v2.896a4.793 4.793 0 0 1 3.77 1.448 4.793 4.793 0 0 1 1.448 3.77 4.793 4.793 0 0 1-1.448 3.77 4.793 4.793 0 0 1-3.77 1.448v2.896a7.689 7.689 0 0 0 4.521-1.573 7.689 7.689 0 0 0 1.573-4.521zM12.358.021a7.689 7.689 0 0 0-4.521 1.573 7.689 7.689 0 0 0-1.573 4.521h2.896a4.793 4.793 0 0 1 1.448-3.77 4.793 4.793 0 0 1 3.77-1.448V.021a4.793 4.793 0 0 0-2.02-.375z"/></svg>
+                                <span>TikTok</span>
+                            </a>
+                         </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Configuration
+        const API_URL = 'http://localhost:3000/api'; // Backend API URL
+        
+        // Generate particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Set max date for birthdate (must be 18+)
+        const today = new Date();
+        const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+        document.getElementById('birthdate').max = maxDate.toISOString().split('T')[0];
+
+        // Form Management
+        const voicePhrases = {
+            en: "Welcome to Eternum, where memories transcend time and space. In this digital realm, I am creating my eternal presence, connecting with loved ones across dimensions. My voice, my essence, my story - all preserved forever in this beautiful metaverse.",
+            es: "Bienvenido a Eternum, donde los recuerdos trascienden el tiempo y el espacio. En este reino digital, estoy creando mi presencia eterna, conectando con seres queridos a través de dimensiones. Mi voz, mi esencia, mi historia - todo preservado para siempre en este hermoso metaverso."
+        };
+        let currentStep = 1;
+        const totalSteps = 4;
+        let selectedZodiac = null;
+        let selectedHobbies = [];
+        let mediaRecorder = null;
+        let recordingStartTime = null;
+        let recordingTimer = null;
+        let audioBlob = null;
+        let avatarPhotos = {
+            front: null,
+            left: null,
+            right: null
+        };
+
+        function startRegistration() {
+            const welcomeCard = document.getElementById('welcomeCard');
+            const registrationCard = document.getElementById('registrationCard');
+            if (welcomeCard && registrationCard) {
+                welcomeCard.style.display = 'none';
+                registrationCard.style.display = 'block';
+            }
+             // Scroll to the form after it's displayed
+            document.getElementById('registrationCard').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateProgress() {
+            // Update step indicators
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepElement = document.getElementById(`progressStep${i}`);
+                if (i < currentStep) {
+                    stepElement.classList.add('completed');
+                    stepElement.classList.remove('active');
+                } else if (i === currentStep) {
+                    stepElement.classList.add('active');
+                    stepElement.classList.remove('completed');
+                } else {
+                    stepElement.classList.remove('active', 'completed');
+                }
+            }
+        }
+
+        function showStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Show current step
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+            
+            // Update navigation buttons
+            document.getElementById('prevButton').style.display = stepNumber > 1 ? 'block' : 'none';
+            document.getElementById('nextButton').textContent = stepNumber === totalSteps ? 'Complete' : 'Next';
+            
+            updateProgress();
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.textContent = '';
+            });
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('error');
+            });
+        }
+
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(`${fieldId}Error`);
+            if (errorElement) {
+                errorElement.textContent = message;
+                const formGroup = document.getElementById(fieldId).closest('.form-group');
+                if (formGroup) {
+                    formGroup.classList.add('error');
+                }
+            }
+        }
+
+        async function validateCurrentStep() {
+            clearErrors();
+            
+            switch (currentStep) {
+                case 1:
+                    const email = document.getElementById('email').value;
+                    const username = document.getElementById('username').value;
+                    const fullName = document.getElementById('fullName').value;
+                    const password = document.getElementById('password').value;
+                    
+                    let isValid = true;
+                    
+                    if (!email) {
+                        showError('email', 'Email is required');
+                        isValid = false;
+                    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                        showError('email', 'Please enter a valid email');
+                        isValid = false;
+                    }
+                    
+                    if (!username) {
+                        showError('username', 'Username is required');
+                        isValid = false;
+                    } else if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+                        showError('username', 'Username must be 3-20 characters, letters, numbers, and underscores only');
+                        isValid = false;
+                    }
+                    
+                    if (!fullName) {
+                        showError('fullName', 'Full name is required');
+                        isValid = false;
+                    }
+                    
+                    if (!password) {
+                        showError('password', 'Password is required');
+                        isValid = false;
+                    } else if (password.length < 8) {
+                        showError('password', 'Password must be at least 8 characters');
+                        isValid = false;
+                    }
+                    
+                    return isValid;
+                    
+                case 2:
+                    const birthdate = document.getElementById('birthdate').value;
+                    if (!birthdate) {
+                        showError('birthdate', 'Birth date is required');
+                        return false;
+                    }
+                    
+                    const age = calculateAge(birthdate);
+                    if (age < 18) {
+                        showError('birthdate', 'You must be at least 18 years old');
+                        return false;
+                    }
+                    
+                    if (!selectedZodiac) {
+                        alert('Please select your zodiac sign');
+                        return false;
+                    }
+                    return true;
+                    
+                case 3:
+                    if (selectedHobbies.length === 0) {
+                        alert('Please select at least one hobby');
+                        return false;
+                    }
+                    return true;
+                    
+                case 4:
+                    if (!audioBlob) {
+                        alert('Please record your voice before completing the registration.');
+                        return false;
+                    }
+                    return true;
+                    
+                default:
+                    return true;
+            }
+        }
+
+        function calculateAge(birthdate) {
+            const today = new Date();
+            const birth = new Date(birthdate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            return age;
+        }
+
+        async function nextStep() {
+            if (await validateCurrentStep()) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    showStep(currentStep);
+                } else {
+                    completeRegistration();
+                }
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        // Zodiac sign selection
+        document.querySelectorAll('.zodiac-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.zodiac-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedZodiac = this.dataset.sign;
+            });
+        });
+
+        // Hobby selection
+        document.querySelectorAll('.hobby-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                this.classList.toggle('selected');
+                const hobby = this.dataset.hobby;
+                if (this.classList.contains('selected')) {
+                    selectedHobbies.push(hobby);
+                } else {
+                    selectedHobbies = selectedHobbies.filter(h => h !== hobby);
+                }
+            });
+        });
+
+        // Photo upload handling
+        function handlePhotoUpload(event, side) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPhotos[side] = file;
+                    
+                    // Update UI
+                    const box = document.getElementById(`${side}PhotoBox`);
+                    box.classList.add('has-image');
+                    box.innerHTML = `
+                        <input type="file" accept="image/*" onchange="handlePhotoUpload(event, '${side}')">
+                        <img src="${e.target.result}" class="photo-preview" alt="${side} view">
+                        <div class="upload-label">Change Photo</div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Voice recording
+        async function toggleRecording() {
+            const recordButton = document.getElementById('recordButton');
+            const timerDisplay = document.getElementById('recordingTimer');
+            
+            if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    const options = { mimeType: 'audio/webm' };
+                    mediaRecorder = new MediaRecorder(stream, options);
+                    const audioChunks = [];
+                    
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+                    
+                    mediaRecorder.onstop = () => {
+                        audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        console.log('Recording complete', audioBlob);
+                    };
+                    
+                    mediaRecorder.start();
+                    recordButton.innerHTML = '⏹️ Stop Recording';
+                    recordButton.classList.add('recording');
+                    timerDisplay.style.display = 'block';
+                    
+                    // Start timer
+                    recordingStartTime = Date.now();
+                    recordingTimer = setInterval(updateRecordingTimer, 100);
+                    
+                    // Auto-stop after 30 seconds
+                    setTimeout(() => {
+                        if (mediaRecorder && mediaRecorder.state === 'recording') {
+                            stopRecording();
+                        }
+                    }, 30000);
+                    
+                } catch (err) {
+                    console.error('Error accessing microphone:', err);
+                    alert('Please allow microphone access to continue');
+                }
+            } else {
+                // Stop recording
+                stopRecording();
+            }
+        }
+
+        function stopRecording() {
+            const recordButton = document.getElementById('recordButton');
+            
+            mediaRecorder.stop();
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            
+            recordButton.innerHTML = '✓ Recording Complete';
+            recordButton.classList.remove('recording');
+            recordButton.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+            recordButton.disabled = true;
+            
+            clearInterval(recordingTimer);
+            
+            setTimeout(() => {
+                recordButton.innerHTML = '🎤 Re-record';
+                recordButton.disabled = false;
+                recordButton.style.background = '';
+            }, 2000);
+        }
+
+        function updateRecordingTimer() {
+            const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('recordingTimer').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        async function completeRegistration() {
+            // Final validation for the last step
+            if (!await validateCurrentStep()) return;
+
+            const nextButton = document.getElementById('nextButton');
+            nextButton.innerHTML = '<span class="loading"></span> Processing...';
+            nextButton.disabled = true;
+
+            try {
+                // Create FormData for multipart upload
+                const formData = new FormData();
+                
+                // Add basic info
+                formData.append('email', document.getElementById('email').value);
+                formData.append('username', document.getElementById('username').value);
+                formData.append('fullName', document.getElementById('fullName').value);
+                formData.append('password', document.getElementById('password').value);
+                
+                // Add personal info
+                const birthdate = document.getElementById('birthdate').value;
+                formData.append('birthDate', birthdate);
+                formData.append('zodiacSign', selectedZodiac);
+                formData.append('age', calculateAge(birthdate));
+                
+                // Add interests
+                formData.append('hobbies', JSON.stringify(selectedHobbies));
+                formData.append('customInterests', document.getElementById('customInterests').value);
+                
+                // Add avatar photos if available
+                if (avatarPhotos.front) formData.append('frontPhoto', avatarPhotos.front);
+                if (avatarPhotos.left) formData.append('leftPhoto', avatarPhotos.left);
+                if (avatarPhotos.right) formData.append('rightPhoto', avatarPhotos.right);
+                
+                // Add voice recording
+                if (audioBlob) {
+                    formData.append('voiceRecording', audioBlob, 'voice-recording.webm');
+                }
+                
+                // Submit to backend API
+                console.log("Submitting registration data to backend...");
+                
+                // Debug: Log what we're sending
+                console.log("Form data being sent:");
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}:`, value);
+                }
+                
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `Server error: ${response.status}`);
+                }
+                
+                const userData = await response.json();
+                console.log('Registration successful:', userData);
+                showSuccessState(userData);
+                
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert(`Registration failed: ${error.message}`);
+                nextButton.innerHTML = 'Complete';
+                nextButton.disabled = false;
+            }
+        }
+
+        function showSuccessState(userData) {
+            const registrationCard = document.getElementById('registrationCard');
+            registrationCard.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div class="success-animation">🎉</div>
+                    <h2>Welcome to Eternum!</h2>
+                    <p style="color: var(--muted-text); margin: 1rem 0;">
+                        Your digital identity has been created successfully.
+                    </p>
+                    <p style="color: var(--muted-text); margin-bottom: 2rem;">
+                        Get ready to explore infinite possibilities in our metaverse.
+                    </p>
+                    <button class="cta-button" onclick="enterEternum('${userData.token}')">
+                        Enter Eternum
+                    </button>
+                </div>
+            `;
+        }
+
+        function enterEternum(token) {
+            // Store token and redirect to game
+            localStorage.setItem('eternumToken', token);
+            console.log("Stored authentication token:", token);
+            alert("Registration complete! Token stored. You can now access Eternum features.");
+            // window.location.href = '/game'; // Update with your Unity game URL
+        }
+
+        // Auto-calculate zodiac sign based on birthdate
+        document.getElementById('birthdate').addEventListener('change', function() {
+            const date = new Date(this.value);
+            const month = date.getUTCMonth() + 1; // Use getUTCMonth to avoid timezone issues
+            const day = date.getUTCDate();
+            
+            let zodiac = '';
+            if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) zodiac = 'aries';
+            else if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) zodiac = 'taurus';
+            else if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) zodiac = 'gemini';
+            else if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) zodiac = 'cancer';
+            else if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) zodiac = 'leo';
+            else if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) zodiac = 'virgo';
+            else if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) zodiac = 'libra';
+            else if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) zodiac = 'scorpio';
+            else if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) zodiac = 'sagittarius';
+            else if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) zodiac = 'capricorn';
+            else if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) zodiac = 'aquarius';
+            else if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) zodiac = 'pisces';
+            
+            if (zodiac) {
+                document.querySelectorAll('.zodiac-option').forEach(opt => opt.classList.remove('selected'));
+                const zodiacElement = document.querySelector(`[data-sign="${zodiac}"]`);
+                if (zodiacElement) {
+                    zodiacElement.classList.add('selected');
+                    selectedZodiac = zodiac;
+                }
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // Allow the 'Get Started' button's specific onclick to run without interference
+                if (this.getAttribute('onclick') === 'startRegistration()') {
+                    return;
+                }
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Prevent form submission on Enter key
+        document.getElementById('registrationForm').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                // Only trigger nextStep if the button is for "Next", not "Complete"
+                if (currentStep < totalSteps) {
+                    nextStep();
+                } else if(currentStep === totalSteps){
+                    // If on the last step, trigger the final submission
+                    completeRegistration();
+                }
+            }
+        });
+
+        // Prevent default form submission for the main registration form
+        function handleFormSubmit(event) {
+            event.preventDefault();
+        }
+
+        // Language Selector Logic
+        const langENButton = document.getElementById('lang-en');
+        const langESButton = document.getElementById('lang-es');
+        const recordingPhraseEl = document.getElementById('recordingPhrase');
+
+        // Set the default English phrase when the page loads
+        if (recordingPhraseEl) {
+            recordingPhraseEl.textContent = voicePhrases.en;
+        }
+
+        if(langENButton && langESButton && recordingPhraseEl) {
+            langENButton.addEventListener('click', () => {
+                recordingPhraseEl.textContent = voicePhrases.en;
+                langENButton.classList.add('active');
+                langESButton.classList.remove('active');
+            });
+
+            langESButton.addEventListener('click', () => {
+                recordingPhraseEl.textContent = voicePhrases.es;
+                langESButton.classList.add('active');
+                langENButton.classList.remove('active');
+            });
+        }
+
+    </script>
+</body>
+</html>

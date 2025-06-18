@@ -1,0 +1,208 @@
+# Eternum API Test Commands
+# Use these curl commands to test your API endpoints
+
+# Set your API URL (change if needed)
+API_URL="http://localhost:3000/api"
+
+# 1. Test Health Check
+echo "Testing Health Check..."
+curl -X GET "$API_URL/health"
+echo -e "\n\n"
+
+# 2. Register New User (without files)
+echo "Testing Registration (without files)..."
+curl -X POST "$API_URL/register" \
+  -H "Content-Type: multipart/form-data" \
+  -F "email=newuser@example.com" \
+  -F "username=newuser123" \
+  -F "fullName=New User" \
+  -F "password=password123" \
+  -F "birthDate=1995-06-15" \
+  -F "zodiacSign=gemini" \
+  -F "age=29" \
+  -F 'hobbies=["gaming","music","art"]' \
+  -F "customInterests=I love exploring virtual worlds"
+echo -e "\n\n"
+
+# 3. Register with Files (example with test files)
+echo "Testing Registration with files..."
+# First create test files
+echo "This is a test voice recording" > test_voice.txt
+echo "Test image data" > test_photo.txt
+
+curl -X POST "$API_URL/register" \
+  -H "Content-Type: multipart/form-data" \
+  -F "email=userWithFiles@example.com" \
+  -F "username=fileuser123" \
+  -F "fullName=File User" \
+  -F "password=password123" \
+  -F "birthDate=1990-03-21" \
+  -F "zodiacSign=aries" \
+  -F "age=34" \
+  -F 'hobbies=["photography","technology"]' \
+  -F "customInterests=Testing file uploads" \
+  -F "frontPhoto=@test_photo.txt" \
+  -F "leftPhoto=@test_photo.txt" \
+  -F "rightPhoto=@test_photo.txt" \
+  -F "voiceRecording=@test_voice.txt"
+echo -e "\n\n"
+
+# Clean up test files
+rm -f test_voice.txt test_photo.txt
+
+# 4. Login Test
+echo "Testing Login..."
+LOGIN_RESPONSE=$(curl -s -X POST "$API_URL/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "emailOrUsername": "demo@eternum.world",
+    "password": "demo123456"
+  }')
+
+echo $LOGIN_RESPONSE | jq '.'
+
+# Extract token from response (requires jq)
+TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.token')
+echo -e "\nExtracted Token: $TOKEN\n"
+
+# 5. Get User Profile (authenticated)
+echo "Testing Get User Profile..."
+USER_ID=$(echo $LOGIN_RESPONSE | jq -r '.user.id')
+curl -X GET "$API_URL/user/$USER_ID" \
+  -H "Authorization: Bearer $TOKEN"
+echo -e "\n\n"
+
+# 6. Get User Notifications (authenticated)
+echo "Testing Get Notifications..."
+curl -X GET "$API_URL/user/$USER_ID/notifications" \
+  -H "Authorization: Bearer $TOKEN"
+echo -e "\n\n"
+
+# 7. Update Avatar (authenticated)
+echo "Testing Update Avatar..."
+curl -X PUT "$API_URL/user/$USER_ID/avatar" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customization": {
+      "clothing": {
+        "head": "tech_visor",
+        "body": "cyberpunk_jacket",
+        "feet": "hover_boots",
+        "accessories": ["holo_badge", "digital_watch"]
+      },
+      "appearance": {
+        "skinTone": "light",
+        "hairStyle": "modern_fade",
+        "hairColor": "purple",
+        "eyeColor": "green"
+      }
+    }
+  }'
+echo -e "\n\n"
+
+# ===================================
+# PowerShell Version (for Windows)
+# ===================================
+# Save this as test-api.ps1
+
+# Set API URL
+$API_URL = "http://localhost:3000/api"
+
+# 1. Test Health Check
+Write-Host "Testing Health Check..." -ForegroundColor Green
+Invoke-RestMethod -Uri "$API_URL/health" -Method Get
+
+# 2. Login Test
+Write-Host "`nTesting Login..." -ForegroundColor Green
+$loginBody = @{
+    emailOrUsername = "demo@eternum.world"
+    password = "demo123456"
+} | ConvertTo-Json
+
+$loginResponse = Invoke-RestMethod -Uri "$API_URL/login" -Method Post -Body $loginBody -ContentType "application/json"
+$token = $loginResponse.token
+$userId = $loginResponse.user.id
+
+Write-Host "Login successful! Token: $token" -ForegroundColor Yellow
+
+# 3. Get User Profile
+Write-Host "`nTesting Get User Profile..." -ForegroundColor Green
+$headers = @{
+    Authorization = "Bearer $token"
+}
+Invoke-RestMethod -Uri "$API_URL/user/$userId" -Method Get -Headers $headers
+
+# ===================================
+# JavaScript/Node.js Test Script
+# ===================================
+// Save this as test-api.js
+const fetch = require('node-fetch');
+const FormData = require('form-data');
+const fs = require('fs');
+
+const API_URL = 'http://localhost:3000/api';
+
+async function testAPI() {
+    console.log('🧪 Starting API tests...\n');
+
+    try {
+        // 1. Health Check
+        console.log('1️⃣ Testing Health Check...');
+        const healthResponse = await fetch(`${API_URL}/health`);
+        const healthData = await healthResponse.json();
+        console.log('✅ Health:', healthData);
+
+        // 2. Register User
+        console.log('\n2️⃣ Testing Registration...');
+        const formData = new FormData();
+        formData.append('email', `test${Date.now()}@example.com`);
+        formData.append('username', `testuser${Date.now()}`);
+        formData.append('fullName', 'Test User');
+        formData.append('password', 'password123');
+        formData.append('birthDate', '1995-06-15');
+        formData.append('zodiacSign', 'gemini');
+        formData.append('age', '29');
+        formData.append('hobbies', JSON.stringify(['gaming', 'music']));
+        formData.append('customInterests', 'Testing the API');
+
+        const registerResponse = await fetch(`${API_URL}/register`, {
+            method: 'POST',
+            body: formData
+        });
+        const registerData = await registerResponse.json();
+        console.log('✅ Registration:', registerData);
+
+        // 3. Login
+        console.log('\n3️⃣ Testing Login...');
+        const loginResponse = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                emailOrUsername: 'demo@eternum.world',
+                password: 'demo123456'
+            })
+        });
+        const loginData = await loginResponse.json();
+        console.log('✅ Login:', loginData);
+
+        const token = loginData.token;
+        const userId = loginData.user.id;
+
+        // 4. Get User Profile
+        console.log('\n4️⃣ Testing Get User Profile...');
+        const profileResponse = await fetch(`${API_URL}/user/${userId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const profileData = await profileResponse.json();
+        console.log('✅ Profile:', profileData);
+
+        console.log('\n✅ All tests completed successfully!');
+
+    } catch (error) {
+        console.error('❌ Test failed:', error);
+    }
+}
+
+// Run tests
+testAPI();
