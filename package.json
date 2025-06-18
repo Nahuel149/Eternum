@@ -19,7 +19,6 @@
   "author": "Eternum Team",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.1691.0",
     "bcrypt": "^6.0.0",
     "compression": "^1.7.5",
     "cors": "^2.8.5",

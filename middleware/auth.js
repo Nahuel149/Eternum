@@ -1,5 +1,5 @@
 // middleware/auth.js - Authentication Middleware
-const { verifyToken } = require('../utils/jwt');
+const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -12,7 +12,7 @@ const authMiddleware = (req, res, next) => {
     }
     
     try {
-        const decoded = verifyToken(token);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'eternum-secret-key-2025');
         req.userId = decoded.userId;
         next();
     } catch (error) {
@@ -25,126 +25,9 @@ const authMiddleware = (req, res, next) => {
 
 module.exports = authMiddleware;
 
-// ===================================
-// utils/fileUpload.js - S3 Upload Configuration
-// ===================================
-const multer = require('multer');
-const multerS3 = require('multer-s3');
-const AWS = require('aws-sdk');
-const path = require('path');
+// S3 upload configuration removed - using Cloudinary instead
 
-// Configure AWS S3
-const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: process.env.AWS_REGION || 'us-east-1'
-});
-
-// Check if S3 is configured
-const useS3 = process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && process.env.AWS_S3_BUCKET;
-
-// Local storage configuration
-const localStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        let uploadPath = 'uploads/';
-        if (file.fieldname.includes('Photo')) {
-            uploadPath += 'photos/';
-        } else if (file.fieldname === 'voiceRecording') {
-            uploadPath += 'voices/';
-        } else {
-            uploadPath += 'avatars/';
-        }
-        cb(null, uploadPath);
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
-// S3 storage configuration
-const s3Storage = multerS3({
-    s3: s3,
-    bucket: process.env.AWS_S3_BUCKET,
-    acl: 'public-read',
-    metadata: function (req, file, cb) {
-        cb(null, { 
-            fieldName: file.fieldname,
-            uploadedBy: req.userId || 'anonymous'
-        });
-    },
-    key: function (req, file, cb) {
-        let folder = 'misc/';
-        if (file.fieldname.includes('Photo')) {
-            folder = 'photos/';
-        } else if (file.fieldname === 'voiceRecording') {
-            folder = 'voices/';
-        } else if (file.fieldname.includes('avatar')) {
-            folder = 'avatars/';
-        }
-        
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, folder + file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
-// File filter
-const fileFilter = (req, file, cb) => {
-    if (file.fieldname === 'voiceRecording') {
-        if (file.mimetype.startsWith('audio/')) {
-            cb(null, true);
-        } else {
-            cb(new Error('Only audio files are allowed for voice recording'));
-        }
-    } else if (file.fieldname.includes('Photo')) {
-        if (file.mimetype.startsWith('image/')) {
-            cb(null, true);
-        } else {
-            cb(new Error('Only image files are allowed for photos'));
-        }
-    } else {
-        cb(null, true);
-    }
-};
-
-// Create multer instance
-const upload = multer({
-    storage: useS3 ? s3Storage : localStorage,
-    limits: {
-        fileSize: parseInt(process.env.MAX_FILE_SIZE) || 25 * 1024 * 1024 // 25MB default
-    },
-    fileFilter: fileFilter
-});
-
-module.exports = { upload, useS3 };
-
-// ===================================
-// utils/voiceProcessor.js - Voice Processing Utilities
-// ===================================
-class VoiceProcessor {
-    static async analyzeVoice(audioFilePath) {
-        // Placeholder for voice analysis
-        // In production, integrate with services like:
-        // - Google Cloud Speech-to-Text
-        // - AWS Transcribe
-        // - Deepgram
-        // - AssemblyAI
-        
-        return {
-            pitch: Math.random() * 200 + 50, // 50-250 Hz
-            tone: ['warm', 'neutral', 'cheerful', 'confident'][Math.floor(Math.random() * 4)],
-            accent: 'neutral',
-            language: 'en-US',
-            quality: Math.random() * 0.3 + 0.7 // 0.7-1.0
-        };
-    }
-    
-    static async generateVoiceModelId(userId, characteristics) {
-        return `vm_${userId}_${Date.now()}`;
-    }
-}
-
-module.exports = VoiceProcessor;
+// VoiceProcessor class removed - already exists in utils/voiceProcessor.js
 
 // ===================================
 // controllers/userController.js - User Controllers
@@ -325,11 +208,7 @@ class UserController {
             // await AchievementController.unlock(newUser._id, 'first_steps');
 
             // Generate JWT token
-            const token = signLoginToken(
-                { userId: newUser._id, username: newUser.username },
-                process.env.JWT_SECRET || 'eternum-secret-key-2025',
-                { expiresIn: '30d' }
-            );
+            const token = signLoginToken(newUser._id);
 
             // Log analytics event
             // await AnalyticsController.track('user_registered', { userId: newUser._id });
@@ -411,11 +290,7 @@ class UserController {
             const avatar = await Avatar.findOne({ userId: user._id });
 
             // Generate token
-            const token = signLoginToken(
-                { userId: user._id, username: user.username },
-                process.env.JWT_SECRET || 'eternum-secret-key-2025',
-                { expiresIn: '30d' }
-            );
+            const token = signLoginToken(user._id);
 
             // Check for unread notifications
             const unreadNotifications = await Notification.countDocuments({
